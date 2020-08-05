@@ -23,6 +23,7 @@ extension URLRequest {
     /// - nilAccessToken: Used to specify that the access token was unexpectedly nil
     internal enum AuthorizationError: Error {
         case nilAccessToken
+        case nilClientID
     }
     
     /// The application JSON value.
@@ -39,6 +40,8 @@ extension URLRequest {
     /// This value is in the format of "$PREFIX $VALUE".
     private static let authorizationValueBearerHeaderPrefix = "Bearer"
     
+
+    private static let clientIDHeader = "Client-ID"
 
     
     /// The prefix of OAuth headers.
@@ -86,5 +89,13 @@ extension URLRequest {
             forHTTPHeaderField: URLRequest.authorizationHeader)
         setValue(URLRequest.twitchVersion5AcceptString,
             forHTTPHeaderField: URLRequest.accept)
+    }
+
+    internal mutating func addClientIDHeader(fromTokenManager tokenManager: TwitchTokenManager) throws {
+        guard let clientID = tokenManager.clientID else {
+            throw AuthorizationError.nilClientID
+        }
+        setValue(clientID,
+            forHTTPHeaderField: URLRequest.clientIDHeader)
     }
 }

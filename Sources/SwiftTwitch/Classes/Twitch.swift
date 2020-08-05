@@ -1525,8 +1525,10 @@ public class Twitch {
         do {
             if isNewAPI {
                 try request.addTokenAuthorizationHeader(fromTokenManager: tokenManager)
+                try request.addClientIDHeader(fromTokenManager: tokenManager)
             } else {
                 try request.addOAuthAuthorizationHeader(fromTokenManager: tokenManager)
+                try request.addClientIDHeader(fromTokenManager: tokenManager)
             }
         } catch {
             if enforcesAuthorization {
